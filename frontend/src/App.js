@@ -354,7 +354,7 @@ const SentimentBadge = ({ value }) => {
   const v = (value || "").toLowerCase();
   const s = v === "positive" ? styles.sentimentPositive
     : v === "negative" ? styles.sentimentNegative
-    : styles.sentimentNeutral;
+      : styles.sentimentNeutral;
   const emoji = v === "positive" ? "😊" : v === "negative" ? "😞" : "😐";
   return <span style={s}>{emoji} {value}</span>;
 };
@@ -437,43 +437,41 @@ export default function App() {
       // const extracted = output.data || {};
 
       // ── Option B: Claude API directly ────────────────────────────────────
-      const res = await axios.post(
-  "http://127.0.0.1:8000/langgraph-chat",
-  {
-    message: msg
-  }
-);
+      const API_URL = "https://ai-crm-backend.onrender.com";
+      axios.post(`${API_URL}/langgraph-chat`, {
+        message: input
+      })
 
-const output = res.data.output || res.data;
+      const output = res.data.output || res.data;
 
-const extracted = output.data || {};
+      const extracted = output.data || {};
 
 
-// ── Smart merge ───────────────────────────────────────
-setData(prev => {
+      // ── Smart merge ───────────────────────────────────────
+      setData(prev => {
 
-  const next = { ...prev };
+        const next = { ...prev };
 
-  Object.keys(extracted).forEach(k => {
+        Object.keys(extracted).forEach(k => {
 
-    if (
-      k === "sentiment" ||
-      (extracted[k] && extracted[k] !== "")
-    ) {
-      next[k] = extracted[k];
-    }
-  });
+          if (
+            k === "sentiment" ||
+            (extracted[k] && extracted[k] !== "")
+          ) {
+            next[k] = extracted[k];
+          }
+        });
 
-  return next;
-});
+        return next;
+      });
 
-setMessages(prev => [
-  ...prev,
-  {
-    role: "assistant",
-    data: extracted
-  }
-]);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: "assistant",
+          data: extracted
+        }
+      ]);
       setMessages(prev => [...prev, { role: "assistant", data: extracted }]);
     } catch (err) {
       console.error(err);
@@ -569,72 +567,72 @@ setMessages(prev => [
             return (
               <div key={i} style={styles.msgAI}>
 
-  <div style={styles.msgLabel}>AI</div>
+                <div style={styles.msgLabel}>AI</div>
 
-  {m.error ? (
+                {m.error ? (
 
-    <div
-      style={{
-        ...styles.bubbleUser,
-        background: "#FEE2E2",
-        color: "#991B1B"
-      }}
-    >
-      {m.error}
-    </div>
+                  <div
+                    style={{
+                      ...styles.bubbleUser,
+                      background: "#FEE2E2",
+                      color: "#991B1B"
+                    }}
+                  >
+                    {m.error}
+                  </div>
 
-  ) : (
+                ) : (
 
-    <div style={styles.bubbleAI}>
+                  <div style={styles.bubbleAI}>
 
-      {
-        Array.isArray(m.data) ? (
+                    {
+                      Array.isArray(m.data) ? (
 
-          <div
-            style={{
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px",
-              padding: "12px"
-            }}
-          >
+                        <div
+                          style={{
+                            background: "#fff",
+                            border: "1px solid #e5e7eb",
+                            borderRadius: "12px",
+                            padding: "12px"
+                          }}
+                        >
 
-            <h4>All Interactions</h4>
+                          <h4>All Interactions</h4>
 
-            {m.data.map((item, idx) => (
+                          {m.data.map((item, idx) => (
 
-              <div
-                key={idx}
-                style={{
-                  borderBottom: "1px solid #eee",
-                  padding: "10px 0"
-                }}
-              >
+                            <div
+                              key={idx}
+                              style={{
+                                borderBottom: "1px solid #eee",
+                                padding: "10px 0"
+                              }}
+                            >
 
-                <strong>{item.hcp_name}</strong>
+                              <strong>{item.hcp_name}</strong>
 
-                <div>{item.summary}</div>
+                              <div>{item.summary}</div>
 
-                <div>{item.date}</div>
+                              <div>{item.date}</div>
+
+                            </div>
+
+                          ))}
+
+                        </div>
+
+                      ) : (
+
+                        <AICard data={m.data} />
+
+                      )
+                    }
+
+                  </div>
+
+                )}
 
               </div>
-
-            ))}
-
-          </div>
-
-        ) : (
-
-          <AICard data={m.data} />
-
-        )
-      }
-
-    </div>
-
-  )}
-
-</div>
             );
           })}
 
