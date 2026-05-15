@@ -438,9 +438,13 @@ export default function App() {
 
       // ── Option B: Claude API directly ────────────────────────────────────
       const API_URL = "https://ai-crm-backend.onrender.com";
-      axios.post(`${API_URL}/langgraph-chat`, {
-        message: input
-      })
+
+      const res = await axios.post(
+        `${API_URL}/langgraph-chat`,
+        {
+          message: msg
+        }
+      );
 
       const output = res.data.output || res.data;
 
@@ -475,10 +479,6 @@ export default function App() {
       setMessages(prev => [...prev, { role: "assistant", data: extracted }]);
     } catch (err) {
       console.error(err);
-      setMessages(prev => [
-        ...prev,
-        { role: "assistant", error: "Something went wrong. Please try again." },
-      ]);
     }
     setLoading(false);
   };
