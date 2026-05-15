@@ -431,12 +431,7 @@ export default function App() {
     setMessages(prev => [...prev, { role: "user", content: msg }]);
 
     try {
-      // ── Option A: your LangGraph backend ──────────────────────────────────
-      // const res = await axios.post("http://127.0.0.1:8000/langgraph-chat", { message: msg });
-      // const output = res.data.output || res.data;
-      // const extracted = output.data || {};
 
-      // ── Option B: Claude API directly ────────────────────────────────────
       const API_URL = "https://ai-crm-backend.onrender.com";
 
       const res = await axios.post(
